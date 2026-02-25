@@ -20,11 +20,9 @@ import {
   handleAudioSubmit,
 } from "@/logic/chat-interface-logic";
 import { Dialog } from "@/components/ui/dialog";
-import {
-  ANALYZE_IMAGE_API,
-  CASE_CREATION_API,
-  DOWNLOAD_REPORT_API,
-} from "@/helpers/consts";
+import { api } from "@/config/app.config";
+import { apiPost, apiPostForm } from "@/config/api.config";
+import { downloadFromUrl as centralDownloadFromUrl, type DiagnosisResponse, type ImageAnalysisResponse } from "@/services/api-service";
 import { X } from "lucide-react";
 
 interface ChatInterfaceProps {
@@ -83,59 +81,22 @@ export function ChatInterface({
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // Helper function to send case to ngrok backend with simplified headers
-  async function sendCaseToNgrok(symptomDescription: string) {
-    const url = CASE_CREATION_API;
-    const payload = { symptomDescription };
-    const headers = {
-      "Content-Type": "application/json",
-      "ngrok-skip-browser-warning": "true",
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, OPTIONS",
-      "Access-Control-Allow-Headers":
-        "Content-Type, ngrok-skip-browser-warning",
-    };
-
+  // Helper function to send case to ngrok backend using centralized api client
+  async function sendCaseToNgrok(symptomDescription: string): Promise<DiagnosisResponse> {
     try {
-      const response = await fetch(url, {
-        method: "POST",
-        headers,
-        body: JSON.stringify(payload),
-      });
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`Failed to send case to backend: ${errorText}`);
-      }
-
-      return await response.json();
+      return await apiPost<DiagnosisResponse>(api.endpoints.composeCase, { symptomDescription });
     } catch (error) {
       console.error("Error in sendCaseToNgrok:", error);
       throw error;
     }
   }
 
-  // Add image upload handler and API call for diagnosis
-  async function sendImageForDiagnosis(base64Image: string) {
-    const url = ANALYZE_IMAGE_API;
+  // Add image upload handler and API call for diagnosis using centralized api client
+  async function sendImageForDiagnosis(base64Image: string): Promise<ImageAnalysisResponse> {
     const formData = new FormData();
     formData.append("image", base64Image);
     try {
-      const response = await fetch(url, {
-        method: "POST",
-        body: formData,
-        headers: {
-          "ngrok-skip-browser-warning": "true",
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Methods": "POST, OPTIONS",
-          "Access-Control-Allow-Headers": "ngrok-skip-browser-warning",
-        },
-      });
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`Failed to send image to backend: ${errorText}`);
-      }
-      return await response.json();
+      return await apiPostForm<ImageAnalysisResponse>(api.endpoints.analyzeImage, formData);
     } catch (error) {
       console.error("Error in sendImageForDiagnosis:", error);
       throw error;
@@ -235,9 +196,8 @@ export function ChatInterface({
       console.error(error);
       toast({
         title: "Error",
-        description: `Could not process audio or case. ${
-          error instanceof Error ? error.message : "Unknown error"
-        }`,
+        description: `Could not process audio or case. ${error instanceof Error ? error.message : "Unknown error"
+          }`,
         variant: "destructive",
       });
     } finally {
@@ -430,9 +390,8 @@ export function ChatInterface({
       } catch (error) {
         toast({
           title: "Error",
-          description: `Could not process image. ${
-            error instanceof Error ? error.message : "Unknown error"
-          }`,
+          description: `Could not process image. ${error instanceof Error ? error.message : "Unknown error"
+            }`,
           variant: "destructive",
         });
       } finally {
@@ -468,28 +427,11 @@ export function ChatInterface({
     setDownloadError("");
 
     try {
-      const url = DOWNLOAD_REPORT_API;
       const payload = downloadResponse
         ? downloadResponse
         : imageDownloadResponse;
-      const headers = {
-        "Content-Type": "application/json",
-        "ngrok-skip-browser-warning": "true",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, OPTIONS",
-        "Access-Control-Allow-Headers":
-          "Content-Type, ngrok-skip-browser-warning",
-      };
-      const response = await fetch(url, {
-        method: "POST",
-        headers,
-        body: JSON.stringify(payload),
-      });
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`Failed to download report: ${errorText}`);
-      }
-      const result = await response.json();
+
+      const result = await apiPost(api.endpoints.generateReport, payload);
       setDownloadResponse(result);
       setDownloadSuccess(true);
     } catch (error) {
@@ -588,14 +530,9 @@ export function ChatInterface({
     );
   }
 
-  // Add helper to download image from URL
+  // Use centralized download helper
   function downloadImageFromUrl(url: string, filename: string = "report.png") {
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = filename;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    centralDownloadFromUrl(url, filename);
   }
 
   return (

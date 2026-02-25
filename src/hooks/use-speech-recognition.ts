@@ -13,19 +13,20 @@ type SpeechRecognitionHook = {
 export function useSpeechRecognition(): SpeechRecognitionHook {
   const [text, setText] = useState('');
   const [isListening, setIsListening] = useState(false);
-  const recognitionRef = useRef<SpeechRecognition | null>(null);
+  const recognitionRef = useRef<any | null>(null);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const win = window as any;
+    const SpeechRecognition = win.SpeechRecognition || win.webkitSpeechRecognition;
     if (SpeechRecognition) {
       const recognition = new SpeechRecognition();
       recognition.continuous = true;
       recognition.interimResults = true;
       recognition.lang = 'en-US';
 
-      recognition.onresult = (event) => {
+      recognition.onresult = (event: any) => {
         let interimTranscript = '';
         let finalTranscript = '';
         for (let i = event.resultIndex; i < event.results.length; i++) {
@@ -38,14 +39,14 @@ export function useSpeechRecognition(): SpeechRecognitionHook {
         }
         setText(finalTranscript + interimTranscript);
       };
-      
+
       recognition.onend = () => {
         if (isListening) {
-           setIsListening(false);
+          setIsListening(false);
         }
       };
 
-      recognition.onerror = (event) => {
+      recognition.onerror = (event: any) => {
         console.error('Speech recognition error', event.error);
         setIsListening(false);
       };

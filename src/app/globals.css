@@ -4,57 +4,70 @@
 
 @layer base {
   :root {
-    --background: 0 0% 4%;
-    --foreground: 0 0% 98%;
-    --card: 240 10% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 240 10% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 173 80% 45%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 0 0% 14.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 14.9%;
-    --muted-foreground: 0 0% 63.9%;
-    --accent: 0 0% 14.9%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 20%;
-    --input: 0 0% 14.9%;
-    --ring: 173 80% 45%;
-    --chart-1: 12 76% 61%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
-    --radius: 0.8rem;
+    /* Deep slate/navy palette for premium medical-tech */
+    --background: 222 47% 5%;       /* #0A0E1A */
+    --foreground: 210 20% 92%;      /* #E8ECF1 */
+
+    --card: 222 38% 8%;             /* #0D1425 */
+    --card-foreground: 210 20% 92%;
+
+    --popover: 222 38% 8%;
+    --popover-foreground: 210 20% 92%;
+
+    /* Teal accent as primary */
+    --primary: 171 100% 42%;        /* #00D4B8 */
+    --primary-foreground: 222 47% 5%;
+
+    --secondary: 220 26% 14%;       /* #1A2235 */
+    --secondary-foreground: 210 20% 85%;
+
+    --muted: 220 20% 16%;
+    --muted-foreground: 215 15% 55%;
+
+    --accent: 220 26% 14%;
+    --accent-foreground: 210 20% 92%;
+
+    --destructive: 0 72% 51%;       /* #EF4444 */
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 220 20% 18%;
+    --input: 220 26% 14%;
+    --ring: 171 100% 42%;
+
+    --chart-1: 171 63% 45%;
+    --chart-2: 199 89% 48%;
+    --chart-3: 160 84% 39%;
+    --chart-4: 262 83% 58%;
+    --chart-5: 43 96% 56%;
+
+    --radius: 0.75rem;
   }
+
   .dark {
-    --background: 0 0% 4%;
-    --foreground: 0 0% 98%;
-    --card: 240 10% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 240 10% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 173 80% 45%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 0 0% 14.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 14.9%;
-    --muted-foreground: 0 0% 63.9%;
-    --accent: 0 0% 14.9%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 20%;
-    --input: 0 0% 14.9%;
-    --ring: 173 80% 45%;
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
+    --background: 222 47% 5%;
+    --foreground: 210 20% 92%;
+    --card: 222 38% 8%;
+    --card-foreground: 210 20% 92%;
+    --popover: 222 38% 8%;
+    --popover-foreground: 210 20% 92%;
+    --primary: 171 100% 42%;
+    --primary-foreground: 222 47% 5%;
+    --secondary: 220 26% 14%;
+    --secondary-foreground: 210 20% 85%;
+    --muted: 220 20% 16%;
+    --muted-foreground: 215 15% 55%;
+    --accent: 220 26% 14%;
+    --accent-foreground: 210 20% 92%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 220 20% 18%;
+    --input: 220 26% 14%;
+    --ring: 171 100% 42%;
+    --chart-1: 171 63% 45%;
+    --chart-2: 199 89% 48%;
+    --chart-3: 160 84% 39%;
+    --chart-4: 262 83% 58%;
+    --chart-5: 43 96% 56%;
   }
 }
 
@@ -62,52 +75,127 @@
   * {
     @apply border-border;
   }
+
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased;
+  }
+
+  /* ── Custom scrollbar: thin teal thumb, transparent track ── */
+  ::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: hsl(171 100% 42% / 0.3);
+    border-radius: 9999px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(171 100% 42% / 0.5);
+  }
+
+  /* Firefox scrollbar */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(171 100% 42% / 0.3) transparent;
   }
 }
 
 @layer components {
-  .loader {
-    width: 30px; /* Reduced size for chat */
-    display: flex;
-    align-items: flex-start;
-    aspect-ratio: 1;
+  /* ── Glassmorphism card ── */
+  .glass-card {
+    @apply bg-white/[0.03] backdrop-blur-sm border border-white/[0.08] rounded-xl;
   }
-  .loader:before,
-  .loader:after {
-    content: "";
-    flex: 1;
-    aspect-ratio: 1;
-    --g: conic-gradient(from -90deg at 5px 5px, hsl(var(--foreground)) 90deg, #0000 0);
-    background: var(--g), var(--g), var(--g);
-    background-size: 200% 200%; /* Fix for conic gradient size */
-    filter: drop-shadow(15px 15px 0 hsl(var(--foreground)));
-    animation: l20 1s infinite;
+
+  .glass-card-hover {
+    @apply glass-card transition-all duration-300;
   }
-  .loader:after {
-    transform: scaleX(-1);
+
+  .glass-card-hover:hover {
+    @apply border-med-teal-500/40 shadow-[0_0_20px_rgba(0,212,184,0.08)];
   }
-  @keyframes l20 {
-    0%   {background-position:0     0, 5px 5px, 10px 10px}
-    33%  {background-position:5px  5px, 10px 10px, 0 0}
-    66%  {background-position:10px 10px, 0 0, 5px 5px}
-    100% {background-position:0     0, 5px 5px, 10px 10px}
+
+  /* ── Frosted input area ── */
+  .frosted-toolbar {
+    @apply backdrop-blur-xl bg-med-navy/80 border-t border-white/[0.08];
+  }
+
+  /* ── Shimmer button effect ── */
+  .btn-shimmer {
+    @apply relative overflow-hidden;
+    background-size: 200% 100%;
+  }
+
+  .btn-shimmer::after {
+    content: '';
+    @apply absolute inset-0 pointer-events-none;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.08) 50%,
+      transparent 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 2.5s linear infinite;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .btn-shimmer:hover::after {
+    opacity: 1;
+  }
+
+  /* ── Severity badges ── */
+  .badge-critical {
+    @apply bg-med-critical/15 text-med-critical border border-med-critical/30 px-2.5 py-0.5 rounded-full text-xs font-medium;
+  }
+
+  .badge-warning {
+    @apply bg-med-warning/15 text-med-warning border border-med-warning/30 px-2.5 py-0.5 rounded-full text-xs font-medium;
+  }
+
+  .badge-safe {
+    @apply bg-med-safe/15 text-med-safe border border-med-safe/30 px-2.5 py-0.5 rounded-full text-xs font-medium;
+  }
+
+  .badge-ai {
+    @apply bg-med-ai/15 text-med-ai border border-med-ai/30 px-2.5 py-0.5 rounded-full text-xs font-medium;
+  }
+
+  /* ── Progress bar (YouTube-style) ── */
+  .progress-slim {
+    @apply h-[2px] bg-med-teal rounded-full;
+    animation: progress-bar 2s cubic-bezier(0.16, 1, 0.3, 1);
   }
 }
-
 
 @layer utilities {
   .bg-blurry-gradient {
     background-image: radial-gradient(
       circle at 25% 25%,
-      hsl(var(--primary) / 0.1),
+      hsl(var(--primary) / 0.06),
       transparent 40%
     ),
     radial-gradient(
       circle at 75% 75%,
-      hsl(var(--primary) / 0.1),
+      hsl(171 100% 42% / 0.04),
       transparent 40%
     );
+  }
+
+  /* ── Text gradient utility ── */
+  .text-gradient-teal {
+    @apply bg-gradient-to-r from-med-teal-400 to-med-teal-600 bg-clip-text text-transparent;
+  }
+
+  /* ── Diagnostic card top border ── */
+  .diagnostic-border-top {
+    background: linear-gradient(to right, hsl(171 100% 42% / 0.5), transparent);
+    height: 2px;
   }
 }

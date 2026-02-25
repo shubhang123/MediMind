@@ -4,6 +4,8 @@ export interface Message {
   text?: string;
   content?: React.ReactNode;
   isLoading?: boolean;
+  timestamp?: Date;
+  diagnosisData?: any;
 }
 
 export type Question = {

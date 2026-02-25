@@ -1,4 +1,5 @@
-import type {Config} from 'tailwindcss';
+import type { Config } from 'tailwindcss';
+import { palette, typography } from './config/theme.config';
 
 export default {
   darkMode: ['class'],
@@ -10,11 +11,22 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        body: ['Poppins', 'sans-serif'],
-        headline: ['Poppins', 'sans-serif'],
-        code: ['monospace'],
+        body: [...typography.tailwind.body],
+        headline: [...typography.tailwind.headline],
+        code: [...typography.tailwind.code],
       },
       colors: {
+        'med-dark': palette.dark,
+        'med-navy': palette.navy,
+        'med-surface': palette.surface,
+        'med-surface-light': palette.surfaceLight,
+        'med-teal': palette.teal,
+        'med-info': palette.info,
+        'med-safe': palette.safe,
+        'med-warning': palette.warning,
+        'med-critical': palette.critical,
+        'med-border': palette.border,
+        'med-muted': palette.muted,
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
         card: {
